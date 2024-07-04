@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.add_task.domain.AddTaskUseCase
+import com.example.todoapp.add_task.domain.DeleteTaskUseCase
 import com.example.todoapp.add_task.domain.GetTaskUseCase
+import com.example.todoapp.add_task.domain.UpdateTaskUseCase
 import com.example.todoapp.add_task.ui.TasksUIState.Success
 import com.example.todoapp.add_task.ui.model.TaskModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +24,8 @@ class TaskViewModel
 @Inject constructor(
     getTaskUseCase: GetTaskUseCase,
     private val addTaskUseCase: AddTaskUseCase,
+    private val updateTaskUseCase: UpdateTaskUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase
 ) : ViewModel() {
 
     val uiState: StateFlow<TasksUIState> = getTaskUseCase()
@@ -51,15 +55,19 @@ class TaskViewModel
     }
 
     fun onTaskDone(task: TaskModel) {
-        //val index = tasks.indexOf(task)
-        //_tasks[index] = _tasks[index].let {
-        //    it.copy(done = !it.done)
-        //}
+        viewModelScope.launch {
+            updateTaskUseCase(
+                task.copy(
+                    done = !task.done
+                )
+            )
+        }
     }
 
     fun onTaskRemove(task: TaskModel) {
-        //val selectedTask = _tasks.find { it.id == task.id }
-        //_tasks.remove(selectedTask)
+        viewModelScope.launch {
+            deleteTaskUseCase(task)
+        }
     }
 
 }
