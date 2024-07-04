@@ -73,4 +73,8 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
 
     implementation(libs.androidx.compose.livedata)
+
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.extensions)
 }
